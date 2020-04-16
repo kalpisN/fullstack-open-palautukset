@@ -3,7 +3,6 @@ import React from 'react'
 
 const PersonForm = (props) => {
 
-    
     return (
         <div>
         <form onSubmit={props.onSubmit}>
@@ -22,8 +21,6 @@ const PersonForm = (props) => {
         </div>
       </form>
         </div>
-
     )
-
 }
 export default PersonForm

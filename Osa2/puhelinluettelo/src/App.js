@@ -2,88 +2,123 @@ import React, { useState, useEffect } from 'react'
 import Person from './components/Person'
 import PersonForm from './components/PersonForm'
 import Filter from './components/Filter'
-import axios from 'axios'
+import personService from './service/persons'
 
 const App = () => {
-  
-  const [ filter, setFilter ] = useState('');
 
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '040-123456' },
-    { name: 'Ada Lovelace', number: '39-44-5323523' },
-    { name: 'Dan Abramov', number: '12-43-234345' },
-    { name: 'Mary Poppendieck', number: '39-23-6423122' }
-])
+  const [filter, setFilter] = useState('');
+  const [persons, setPersons] = useState([]);
+  const [newName, setNewName] = useState('');
+  const [newNumber, setNewNumber] = useState('');
 
-const [newName, setNewName] = useState('');
-const [newNumber, setNewNumber] = useState('');
-
-useEffect(() => {
-  console.log('effect')
-  axios
-  .get('http://localhost:3001/persons')
-.then(response => {
-  console.log('promise fulfilled')
-  setPersons(response.data)
-})
-}, [])
+  useEffect(() => {
+    personService
+      .getAll()
+      .then(initialPersons => {
+        setPersons(initialPersons)
+        console.log(initialPersons)
+      })
+  }, [])
 
 
-console.log('render', persons.length, 'persons')
+  console.log('render', persons.length, 'persons')
 
-const addName = (event) => {
+  const personAlreadyExists = (name) => {
+    return persons.some(y => y.name === name)
+  }
+
+  const addName = event => {
     event.preventDefault();
-
-    const personObject = {
+    if (!personAlreadyExists(newName, newNumber)) {
+      const personObject = {
         name: newName,
         number: newNumber
-    }
+      }
+      personService
+        .create(personObject)
+        .then(returnedPerson => {
+          setPersons(persons.concat(returnedPerson))
+          console.log(`${returnedPerson.name} was added to phonebook!`)
+        })
+      setNewName('');
+      setNewNumber('');
 
-    const names = persons.map(person => person.name)
-    console.log(names)
-    if (names.includes(personObject.name)) {
-
-        alert(`${newName} is already added to phonebook`)
-        setNewName('');
-        setNewNumber('');
     }
     else {
-        setPersons(persons.concat(personObject))
-        setNewName('');
-        setNewNumber('');
+      if (window.confirm(`${newName} is already added to phonebook, replace old number with new one?`)) {
+        const id = persons.find(p => p.name === newName).id
+        const personObject = {
+          name: newName,
+          number: newNumber
+        }
+        personService
+          .update(id, personObject)
+          .then(returnedPerson => {
+            setPersons(
+              persons.map(person => person.id === id ? returnedPerson : person)
+            )
+            console.log(`${returnedPerson.name} was updated!`)
+          })
+          .catch(error => {
+            alert(`${newName} does not exist in the server!`)
+            setPersons(persons.filter(person => person.name !== newName))
+          })
+      }
+
     }
+  }
 
-}
+  const handleDelete = (person) => {
+    console.log(person.id);
+    if (window.confirm(`Do you really want tot delete ${person.name}?`)) {
 
-    const handleNameChange = (event) => {
-        console.log(event.target.value)
-        setNewName(event.target.value)
-      }
-    
-      const handleNumberChange = (event) => {
-        console.log(event.target.value)
-        setNewNumber(event.target.value)
-      }
+      personService
+        .del(person.id)
+        .then(data => {
+          console.log(person, 'deleted from phonebook')
+          setPersons(persons.filter(p => p.id !== person.id))
+        })
+        .catch(error => {
+          alert(
+            `${person.name} was already deleted from server`)
+          setPersons(persons.filter(p => p.id !== person.id))
 
-  const handleFilterChange = (event) =>
+        })
+    }
+  }
+
+  const handleNameChange = (event) => {
+    console.log(event.target.value)
+    setNewName(event.target.value)
+  }
+
+  const handleNumberChange = (event) => {
+    console.log(event.target.value)
+    setNewNumber(event.target.value)
+  }
+
+  const handleFilterChange = (event) => {
     setFilter(event.target.value)
+  }
 
-  const filtered = persons.filter(person => 
-                  person.name.toUpperCase().includes(filter.trim().toUpperCase()))
+  const filtered =
+    persons.filter(person =>
+      person.name.toUpperCase().includes(filter.trim().toUpperCase()))
+
 
   return (
     <div>
       <h2>Phonebook</h2>
       <Filter value={filter}
-              onChange={handleFilterChange}/>
+        onChange={handleFilterChange} />
       <h3>Add a new</h3>
-        <PersonForm onSubmit={addName}
-                    onNameChange={handleNameChange}
-                    nameValue={newName}
-                    onNumberChange={handleNumberChange}
-                    numberValue={newNumber}/>
-      <h3>Numbers</h3>      
-          <Person filtered={filtered} />
+      <PersonForm onSubmit={addName}
+        onNameChange={handleNameChange}
+        nameValue={newName}
+        onNumberChange={handleNumberChange}
+        numberValue={newNumber} />
+      <h3>Numbers</h3>
+      <Person filtered={filtered} handleDelete={handleDelete} />
     </div>
   )
 
