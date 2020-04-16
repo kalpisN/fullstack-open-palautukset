@@ -36,18 +36,16 @@ const App = () => {
     }, 5000)
   }
 
-
-  const personAlreadyExists = (name) => {
-    return persons.some(y => y.name === name)
-  }
-
   const addName = event => {
     event.preventDefault();
-    if (!personAlreadyExists(newName, newNumber)) {
-      const personObject = {
-        name: newName,
-        number: newNumber
-      }
+    const personObject = {
+      name: newName,
+      number: newNumber
+    }
+    
+    const names = persons.map(person => person.name)
+    if (!names.includes(personObject.name)) {
+
       personService
         .create(personObject)
         .then(returnedPerson => {
