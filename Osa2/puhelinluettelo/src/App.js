@@ -3,6 +3,7 @@ import Person from './components/Person'
 import PersonForm from './components/PersonForm'
 import Filter from './components/Filter'
 import personService from './service/persons'
+import Notification from './components/Notification'
 
 const App = () => {
 
@@ -10,6 +11,8 @@ const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
+  const [message, setMessage] = useState(null)
+  const [notificationType, setNotificationType] = useState('err')
 
   useEffect(() => {
     personService
@@ -20,8 +23,19 @@ const App = () => {
       })
   }, [])
 
+  const notificationShow = (msg, err) => {
+    if (err) {
+      setNotificationType('err')
+    }
+    else {
+      setNotificationType('success')
+    }
+    setMessage(msg)
+    setTimeout(() => {
+      setMessage(null)
+    }, 5000)
+  }
 
-  console.log('render', persons.length, 'persons')
 
   const personAlreadyExists = (name) => {
     return persons.some(y => y.name === name)
@@ -38,7 +52,7 @@ const App = () => {
         .create(personObject)
         .then(returnedPerson => {
           setPersons(persons.concat(returnedPerson))
-          console.log(`${returnedPerson.name} was added to phonebook!`)
+          notificationShow(`${returnedPerson.name} was added to phonebook!`, false)
         })
       setNewName('');
       setNewNumber('');
@@ -57,10 +71,10 @@ const App = () => {
             setPersons(
               persons.map(person => person.id === id ? returnedPerson : person)
             )
-            console.log(`${returnedPerson.name} was updated!`)
+            notificationShow(`${returnedPerson.name} was updated succesfully!`, false)
           })
           .catch(error => {
-            alert(`${newName} does not exist in the server!`)
+            notificationShow(`${newName} does not exist in the server!`, true)
             setPersons(persons.filter(person => person.name !== newName))
           })
       }
@@ -75,12 +89,11 @@ const App = () => {
       personService
         .del(person.id)
         .then(data => {
-          console.log(person, 'deleted from phonebook')
           setPersons(persons.filter(p => p.id !== person.id))
+          notificationShow(`${person.name} deleted from phonebook`, false)
         })
         .catch(error => {
-          alert(
-            `${person.name} was already deleted from server`)
+          notificationShow(`${person.name} does not exist in the phonebook anymore!`, true)
           setPersons(persons.filter(p => p.id !== person.id))
 
         })
@@ -109,9 +122,10 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} className={notificationType}/>
       <Filter value={filter}
         onChange={handleFilterChange} />
-      <h3>Add a new</h3>
+      <h3>Add a new number</h3>
       <PersonForm onSubmit={addName}
         onNameChange={handleNameChange}
         nameValue={newName}
