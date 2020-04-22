@@ -52,8 +52,6 @@ const App = () => {
           setPersons(persons.concat(returnedPerson))
           notificationShow(`${returnedPerson.name} was added to phonebook!`, false)
         })
-      setNewName('');
-      setNewNumber('');
 
     }
     else {
@@ -76,8 +74,9 @@ const App = () => {
             setPersons(persons.filter(person => person.name !== newName))
           })
       }
-
     }
+    setNewName('')
+    setNewNumber('')
   }
 
   const handleDelete = (person) => {
