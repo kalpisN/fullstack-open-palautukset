@@ -119,12 +119,16 @@ const App = () => {
 return (
   <div>
     {user === null ?
+      <div>
+      <Notification className={messageType} message={message}/>
       <LoginForm onSubmit={handleLogin}
         username={username}
         onUsernameChange={({ target }) => setUsername(target.value)}
         password={password}
         onPasswordChange={({ target }) => setPassword(target.value)}
       />
+      </div>
+
       :
         <div>
         <h1>Blogs</h1>
