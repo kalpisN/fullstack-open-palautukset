@@ -52,6 +52,11 @@ const App = () => {
           setPersons(persons.concat(returnedPerson))
           notificationShow(`${returnedPerson.name} was added to phonebook!`, false)
         })
+        .catch(error => {
+          console.log(error.response.data)
+          notificationShow(error.response.data.error, true)
+        
+        })
 
     }
     else {
