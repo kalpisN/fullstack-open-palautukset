@@ -5,23 +5,25 @@ import loginService from './services/login'
 import LoginForm from './components/LoginForm'
 import NewBlogForm from './components/NewBlogForm'
 import Notification from './components/Notification'
+import Togglable from './components/Togglable'
+import './App.css'
+
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [newTitle, setNewTitle] = useState('')
-  const [newAuthor, setNewAuthor] = useState('')
-  const [newUrl, setNewUrl] = useState('')
   const [message, setMessage] = useState(null)
   const [messageType, setMessageType] = useState('err')
+
+  const myRef = React.createRef()
 
   useEffect(() => {
     blogService.getAll()
       .then(blogs =>
-      setBlogs(blogs)
-    )
+        setBlogs(blogs)
+      )
   }, [])
 
   useEffect(() => {
@@ -60,20 +62,6 @@ const App = () => {
     setUser(null)
   }
 
-  const handleTitleChange = (event) => {
-    console.log(event.target.value)
-    setNewTitle(event.target.value)
-  }
-
-  const handleAuthorChange = (event) => {
-    console.log(event.target.value)
-    setNewAuthor(event.target.value)
-  }
-
-  const handleUrlChange = (event) => {
-    setNewUrl(event.target.value)
-  }
-
   const notification = (msg, err) => {
     if (err) {
       setMessageType('err')
@@ -87,75 +75,58 @@ const App = () => {
     }, 5000)
   }
 
-  const addNewBlog = async (event) => {
-    event.preventDefault()
-    const blogObject = {
-      title: newTitle,
-      author: newAuthor,
-      url: newUrl
-    }
+  const addNewBlog = async (blogObject) => {
 
     try {
-
+      myRef.current.toggleVisibility()
       await blogService
         .create(blogObject)
-          setBlogs(blogs.concat(blogObject))
-          notification(`a new blog ${blogObject.title} by ${blogObject.author} was added to bloglist!`, false)
-    
+      setBlogs(blogs.concat(blogObject))
+      notification(`a new blog ${blogObject.title} by ${blogObject.author} was added to bloglist!`, false)
+
+
     }
     catch (error) {
-      
       notification(error.message, true)
-
     }
-
-    setNewTitle('')
-    setNewAuthor('')
-    setNewUrl('')
   }
 
 
 
-return (
-  <div>
-    {user === null ?
-      <div>
-      <Notification className={messageType} message={message}/>
-      <LoginForm onSubmit={handleLogin}
-        username={username}
-        onUsernameChange={({ target }) => setUsername(target.value)}
-        password={password}
-        onPasswordChange={({ target }) => setPassword(target.value)}
-      />
-      </div>
-
-      :
+  return (
+    <div>
+      {user === null ?
         <div>
-        <h1>Blogs</h1>
-        <Notification className={messageType} message={message}/>
-        <h3>{user.name} logged in
+
+          <LoginForm onSubmit={handleLogin}
+            username={username}
+            onUsernameChange={({ target }) => setUsername(target.value)}
+            password={password}
+            onPasswordChange={({ target }) => setPassword(target.value)}
+          />
+        </div>
+
+        :
+        <div>
+          <h1>Blogs</h1>
+          <Notification className={messageType} message={message} />
+          <h3>{user.name} logged in
         <button onClick={handleLogout}>Logout</button>
-        </h3>
-        <div>
-        <NewBlogForm onSubmit={addNewBlog}
-          onTitleChange={handleTitleChange}
-          onAuthorChange={handleAuthorChange}
-          onUrlChange={handleUrlChange}
-          title={newTitle}
-          author={newAuthor}
-          url={newUrl}
+          </h3>
 
-        />
+          <Togglable ref={myRef} buttonLabel='new blog'>
+            <NewBlogForm createBlog={addNewBlog} />
+          </Togglable>
+
+          {blogs.map(blog =>
+            <Blog key={blog.id} blog={blog} />
+          )}
+
+
         </div>
-        <div>
-        {blogs.map(blog =>
-          <Blog key={blog._id} blog={blog} />
-        )}
-        </div>
-        </div>
-    }
-  </div>
-)
-  }
+      }
+    </div>
+  )
+}
 
 export default App
