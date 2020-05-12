@@ -83,21 +83,26 @@ const App = () => {
         .create(blogObject)
       setBlogs(blogs.concat(blogObject))
       notification(`a new blog ${blogObject.title} by ${blogObject.author} was added to bloglist!`, false)
-
-
     }
     catch (error) {
       notification(error.message, true)
     }
   }
 
+  const updateBlog = async (blogObject) => {
 
+    try {
+      await blogService
+        .update(blogObject)
+    } catch (error) {
+      notification(error.message, true)
+    }
+  }
 
   return (
     <div>
       {user === null ?
         <div>
-
           <LoginForm onSubmit={handleLogin}
             username={username}
             onUsernameChange={({ target }) => setUsername(target.value)}
@@ -105,7 +110,6 @@ const App = () => {
             onPasswordChange={({ target }) => setPassword(target.value)}
           />
         </div>
-
         :
         <div>
           <h1>Blogs</h1>
@@ -119,9 +123,8 @@ const App = () => {
           </Togglable>
 
           {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} />
+            <Blog updateBlog={updateBlog} key={blog.id} blog={blog} />
           )}
-
 
         </div>
       }
