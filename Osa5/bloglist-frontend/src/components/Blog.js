@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 const Blog = ({ blog, updateBlog }) => {
 
   const [showAll, setShowAll] = useState(false)
-  
+
   const addLike = (event) => {
 
     updateBlog(event.target.value)
@@ -14,7 +14,7 @@ const Blog = ({ blog, updateBlog }) => {
     <div>
       {showAll === false ?
         <div className="blog" key={blog.id}>
-          <p onClick={() => setShowAll(true)}>{blog.title}</p>
+          <p> {blog.title} <button onClick={() => setShowAll(true)}>view</button></p>
         </div>
         :
         <div className="blog" key={blog.id}>

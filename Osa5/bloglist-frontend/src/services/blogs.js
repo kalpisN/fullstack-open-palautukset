@@ -18,8 +18,8 @@ const create = async newObject => {
   }
 
   const response = await axios.post(baseUrl, newObject, config)
-  console.log(response.config.data)
-  return response.config.data
+  console.log(response.data)
+  return response.data
 }
 
 const update = (blogId, blogObject) => {
