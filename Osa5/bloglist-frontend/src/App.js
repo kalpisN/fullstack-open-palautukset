@@ -89,14 +89,22 @@ const App = () => {
     }
   }
 
-  const updateBlog = async (blogObject) => {
-
-    try {
-      await blogService
-        .update(blogObject)
-    } catch (error) {
-      notification(error.message, true)
-    }
+  const updateBlog = (id) => {
+    
+    const blog = blogs.find(b => b.id === id)
+      const blogObject = {
+        ...blog,
+        likes: blog.likes+1     
+      }
+  
+      blogService
+        .update(id, blogObject)
+        .then(returnedBlog => {
+          setBlogs(blogs.map(blog => blog.id !== id ? blog: returnedBlog))
+        })
+        .catch (error => {
+          notification(error.message, true)
+        })    
   }
 
   return (
