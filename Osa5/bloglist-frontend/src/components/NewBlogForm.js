@@ -28,18 +28,18 @@ const NewBlogForm = ({ createBlog }) => {
             author: newAuthor,
             url: newUrl
         })
-    
+
         setNewTitle('')
         setNewUrl('')
         setNewAuthor('')
-      }
+    }
     return (
         <>
             <h2>Create new</h2>
             <form onSubmit={addNote}>
                 <div>
                     title:
-            <input
+                    <input
                         type="text"
                         value={newTitle}
                         name="title"
@@ -48,7 +48,7 @@ const NewBlogForm = ({ createBlog }) => {
                 </div>
                 <div>
                     author:
-            <input
+                    <input
                         type="text"
                         value={newAuthor}
                         name="title"
@@ -57,7 +57,7 @@ const NewBlogForm = ({ createBlog }) => {
                 </div>
                 <div>
                     url:
-            <input
+                    <input
                         type="text"
                         value={newUrl}
                         name="url"
