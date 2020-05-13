@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 const Blog = ({ user, blog, updateBlog, removeBlog }) => {
 
   const showButton = {
-    display: user === blog.user.id ? "" : "none"
+    display: user === blog.user.id || blog.user ? "" : "none"
   }
 
   const [showAll, setShowAll] = useState(false)
