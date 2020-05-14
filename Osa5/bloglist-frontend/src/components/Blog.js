@@ -19,17 +19,17 @@ const Blog = ({ user, blog, updateBlog, removeBlog }) => {
     }
 
     return (
-        <div className="blog">
+        <div id="blog" className="blog">
             {showAll === false ?
                 <div key={blog.id}>
-                    <p> {blog.title} <button onClick={() => setShowAll(true)}   >view</button></p>
+                    <p>{blog.title}, {blog.author}<button onClick={() => setShowAll(true)} >view</button></p>
                 </div>
                 :
                 <div key={blog.id}>
-                    <p>{blog.title}<button onClick={() => setShowAll(false)}>hide</button></p>
-                    <p>{blog.url}</p>
-                    <p>likes: {blog.likes} <button value={blog.id} onClick={addLike}>like</button></p>
-                    <p>{blog.author}</p>
+                    <p>Title: {blog.title}<button onClick={() => setShowAll(false)}>hide</button></p>
+                    <p>Author: {blog.author}</p>
+                    <p><a href={blog.url}>{blog.url}</a></p>
+                    <p>likes: {blog.likes} <button id='like' value={blog.id} onClick={addLike}>like</button></p>
                     <p>
                         <button style={showButton} value={blog.id} onClick={remove}>remove</button>
                     </p>

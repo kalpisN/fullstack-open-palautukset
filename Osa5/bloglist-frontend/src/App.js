@@ -117,9 +117,9 @@ const App = () => {
 
             blogService
                 .remove(id)
-                .then(removedBlog => {
+                .then(response => {
                     setBlogs(blogs.filter(b => b.id !== id))
-                    notification(`${removedBlog.title} by ${removedBlog.author} removed succesfully`)
+                    notification(`${blog.title} by ${blog.author} removed succesfully`)
                 })
 
                 .catch(error => {
