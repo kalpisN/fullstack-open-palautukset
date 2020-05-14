@@ -43,21 +43,33 @@ describe('Blog app', function () {
     describe('When logged in', function () {
         beforeEach(function () {
             cy.login({ username: 'kkayttaja', password: 'salasana' })
+            cy.createBlog({ title: 'testiblogi', author: 'testaaja', url: 'www.testiblogi.fi' })
         })
 
 
         it('A blog can be created', function () {
             cy.contains('new blog').click()
-            cy.get('#title').type('Blog')
+            cy.get('#title').type('new blog')
             cy.get('#author').type('cypress')
             cy.get('#url').type('www.blogbycypress.com')
-            cy.contains('create').click()
-
-            cy.get('.success')
-                .should('contain', 'a new blog Blog by cypress was added to bloglist')   
+            cy.contains('create').click()  
             
-            cy.get('#blogs').should('contain', 'Blog')
+            cy.get('.success').should('contain', 'new blog by cypress was added to bloglist')
+            cy.get('#blogs').should('contain', 'new blog')
                 .and('contain', 'cypress')
+        })
+
+        it('A blog can be liked', function () {
+
+            cy.contains('testiblogi')
+                .contains('view')
+                .click()
+
+            cy.contains('like')
+                .click()
+
+            cy.contains('likes')
+                .contains(1)
         })
     })
 })
