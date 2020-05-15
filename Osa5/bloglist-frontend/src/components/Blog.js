@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 const Blog = ({ user, blog, updateBlog, removeBlog }) => {
 
     const showButton = {
-        display: user === blog.user.id || blog.user ? '' : 'none'
+        display: user === (blog.user.id || blog.user) ? '' : 'none'
     }
 
     const [showAll, setShowAll] = useState(false)
@@ -22,7 +22,7 @@ const Blog = ({ user, blog, updateBlog, removeBlog }) => {
         <div id="blog" className="blog">
             {showAll === false ?
                 <div key={blog.id}>
-                    <p>{blog.title}, {blog.author}<button onClick={() => setShowAll(true)} >view</button></p>
+                    <p>{blog.title}, {blog.author}<button id='view' onClick={() => setShowAll(true)} >view</button></p>
                 </div>
                 :
                 <div key={blog.id}>
