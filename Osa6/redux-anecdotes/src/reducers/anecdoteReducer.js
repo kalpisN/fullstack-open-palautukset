@@ -1,4 +1,4 @@
-
+import anecdoteService from '../services/anecdotes'
 /* const getId = () => (100000 * Math.random()).toFixed(0) */
 
 /* const asObject = (anecdote) => {
@@ -10,24 +10,33 @@
 } */
 
 
-export const addVote = (id) => {
-  return {
+export const addVote = (anecdote) => {
+  return async dispatch => {
+    const updatedAnecdote = await anecdoteService.update(anecdote)
+    dispatch({
     type: 'VOTE',
-    data: { id }
+    data: { id: updatedAnecdote.id }
+  })
   }
 }
 
 export const addAnecdote = (anecdote) => {
-  return {
+  return async dispatch => {
+    const newAnecdote = await anecdoteService.create(anecdote)
+    dispatch({
     type: 'NEW',
-    data: { content: anecdote.content, id: anecdote.id, votes: anecdote.votes }
+    data: { content: newAnecdote.content, id: newAnecdote.id, votes: newAnecdote.votes }
+    })
   }
 }
 
-export const initializeAnecdotes = (anecdotes) => {
-  return {
+export const initializeAnecdotes = () => {
+  return  async dispatch => {
+    const anecdotes = await anecdoteService.getAll()
+    dispatch({
     type: 'INIT_ANECDOTES',
     data: anecdotes,
+    })
   }
 }
 
@@ -51,7 +60,7 @@ const anecdoteReducer = (state = [], action) => {
         return action.data
 
     default:
-      return state.sort((a, b) => b.votes - a.votes)
+      return state
   }
 }
 
