@@ -9,7 +9,6 @@ import anecdoteService from '../services/anecdotes'
   }
 } */
 
-
 export const addVote = (anecdote) => {
   return async dispatch => {
     const updatedAnecdote = await anecdoteService.update(anecdote)

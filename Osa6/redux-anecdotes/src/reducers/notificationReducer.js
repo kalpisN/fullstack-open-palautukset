@@ -1,12 +1,16 @@
 
+let timeOutID;
 
 export const setNotification = (message, timeout) => {
+    clearTimeout(timeOutID)
     return async dispatch => {
+        
         dispatch({
         type: 'SET_MESSAGE',
         message
         })
-        setTimeout(() => {
+        
+        timeOutID = setTimeout(() => {
             dispatch({
                 type: 'SET_MESSAGE',
                 message: null
