@@ -10,7 +10,7 @@ export const setNotific = (message, messageType) => {
 }
 
 const notificationReducer = (state = initialState, action) => {
-
+    console.log(state)
     console.log(action)
     switch (action.type) {
     case 'SET_MESSAGE':

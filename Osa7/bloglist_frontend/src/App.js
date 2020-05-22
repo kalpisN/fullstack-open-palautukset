@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import Blog from './components/Blog'
+import Blogs from './components/Blogs'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import LoginForm from './components/LoginForm'
@@ -7,27 +7,23 @@ import NewBlogForm from './components/NewBlogForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import './App.css'
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { setNotific } from './reducers/notificationReducer'
+import { initializeBlogs } from './reducers/blogReducer'
 
 
 const App = () => {
-    const [blogs, setBlogs] = useState([])
+
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [user, setUser] = useState(null)
 
-    const notification = useSelector(state => state)
     const dispatch = useDispatch()
-
     const myRef = React.createRef()
 
     useEffect(() => {
-        blogService.getAll()
-            .then(blogs =>
-                setBlogs(blogs.sort((a, b) => b.likes - a.likes))
-            )
-    }, [])
+        dispatch(initializeBlogs())
+    }, [dispatch])
 
     useEffect(() => {
         const loggedUserJSON = window.localStorage.getItem('loggedUser')
@@ -73,7 +69,7 @@ const App = () => {
         }, 5000)
     }
 
-    const addNewBlog = (blogObject) => {
+ /*    const addNewBlog = (blogObject) => {
         myRef.current.toggleVisibility()
         blogService
             .create(blogObject)
@@ -102,9 +98,9 @@ const App = () => {
             .catch(error => {
                 setNotification(error.message, 'err')
             })
-    }
+    } */
 
-    const removeBlog = (id) => {
+/*     const removeBlog = (id) => {
 
         const blog = blogs.find(b => b.id === id)
         console.log(blog)
@@ -122,12 +118,12 @@ const App = () => {
                     setNotification(error.message, 'err')
                 })
         }
-    }
+    } */
 
     return (
         <div>
             {user === null ?
-                <div><Notification className={notification.messageType} message={notification.message} />
+                <div><Notification/>
                     <LoginForm onSubmit={handleLogin}
                         username={username}
                         onUsernameChange={({ target }) => setUsername(target.value)}
@@ -138,20 +134,14 @@ const App = () => {
                 :
                 <div>
                     <h1>Blogs</h1>
-                    <Notification className={notification.messageType} message={notification.message} />
+                    <Notification/>
                     <h3>{user.name} logged in
                         <button id='logout' onClick={handleLogout}>Logout</button>
                     </h3>
-
                     <Togglable ref={myRef} buttonLabel='new blog'>
-                        <NewBlogForm createBlog={addNewBlog} />
+                        {/* <NewBlogForm createBlog={addNewBlog} /> */}
                     </Togglable>
-                    <div id='blogs'>
-                        {blogs.map(blog =>
-                            <Blog removeBlog={removeBlog} updateBlog={updateBlog}
-                                key={blog.id} blog={blog} user={user.id}/>
-                        )}
-                    </div>
+                    <Blogs user={user.id}/>
 
                 </div>
             }
