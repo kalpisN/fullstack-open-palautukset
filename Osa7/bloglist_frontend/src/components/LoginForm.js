@@ -1,20 +1,38 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+import React, { useState } from 'react'
+import { connect } from 'react-redux'
+import { setNotification } from '../reducers/notificationReducer'
+import { login } from '../reducers/userReducer'
 
 
 const LoginForm = (props) => {
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
+
+    const handleLogin = async (event) => {
+        event.preventDefault()
+
+        try {
+            props.login(username, password)
+            setUsername('')
+            setPassword('')
+
+        } catch (exeption) {
+            setNotification('wrong username or password', 'err')
+        }
+    }
+
     return (
         <>
             <h2>Login to application</h2>
-            <form onSubmit={props.onSubmit}>
+            <form onSubmit={handleLogin}>
                 <div>
                     username
                     <input
                         id='username'
                         type="text"
-                        value={props.username}
+                        value={username}
                         name="Username"
-                        onChange={props.onUsernameChange}
+                        onChange={({ target }) => setUsername(target.value)}
                     />
                 </div>
                 <div>
@@ -22,9 +40,9 @@ const LoginForm = (props) => {
                     <input
                         id='password'
                         type="password"
-                        value={props.password}
+                        value={password}
                         name="Password"
-                        onChange={props.onPasswordChange}
+                        onChange={({ target }) => setPassword(target.value)}
                     />
                 </div>
                 <button id='login' type="submit">login</button>
@@ -33,12 +51,17 @@ const LoginForm = (props) => {
     )
 }
 
-LoginForm.propTypes = {
-    onSubmit: PropTypes.func.isRequired,
-    onUsernameChange: PropTypes.func.isRequired,
-    onPasswordChange: PropTypes.func.isRequired,
-    username: PropTypes.string.isRequired,
-    password: PropTypes.string.isRequired
+const mapStateToProps = (state) => {
+    return {
+        notification: state.notification,
+        user: state.user
+    }
 }
 
-export default LoginForm
+const mapDispatchToProps = {
+    setNotification,
+    login
+}
+
+const ConnectedLoginForm = connect(mapStateToProps, mapDispatchToProps)(LoginForm)
+export default ConnectedLoginForm

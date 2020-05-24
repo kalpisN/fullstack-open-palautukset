@@ -1,81 +1,70 @@
-import React, { useState } from 'react'
-import PropTypes from 'prop-types'
+import React from 'react'
+import { connect } from 'react-redux'
+import { addBlog } from '../reducers/blogReducer'
+import { setNotification } from '../reducers/notificationReducer'
+import Togglable from './Togglable'
+import { useField } from '../hooks'
 
-const NewBlogForm = ({ createBlog }) => {
+const NewBlogForm = (props) => {
 
-    const [newTitle, setNewTitle] = useState('')
-    const [newAuthor, setNewAuthor] = useState('')
-    const [newUrl, setNewUrl] = useState('')
+    const myRef = React.createRef()
 
-    const handleTitleChange = (event) => {
-        console.log(event.target.value)
-        setNewTitle(event.target.value)
-    }
+    const title = useField('text')
+    const author = useField('text')
+    const url = useField('text')
 
-    const handleAuthorChange = (event) => {
-        console.log(event.target.value)
-        setNewAuthor(event.target.value)
-    }
-
-    const handleUrlChange = (event) => {
-        setNewUrl(event.target.value)
-    }
-
-    const addNote = (event) => {
+    const createBlog = async (event) => {
         event.preventDefault()
-        createBlog({
-            title: newTitle,
-            author: newAuthor,
-            url: newUrl
-        })
 
-        setNewTitle('')
-        setNewUrl('')
-        setNewAuthor('')
+        myRef.current.toggleVisibility()
+
+        const blogObject = {
+            title: title.value,
+            author: author.value,
+            url: url.value
+        }
+
+        await props.addBlog(blogObject)
+            .then(createdBlog => props.setNotification(`a new blog ${blogObject.title} by ${blogObject.author} was added to bloglist!`, 'success'))
+            .catch(error => props.setNotification(error.message, 'err'))
     }
+
     return (
         <>
-            <h2>Create new</h2>
-            <form id='form' onSubmit={addNote}>
-                <div>
-                    title:
-                    <input
-                        id="title"
-                        type="text"
-                        value={newTitle}
-                        name="title"
-                        onChange={handleTitleChange}
-                    />
-                </div>
-                <div>
-                    author:
-                    <input
-                        id='author'
-                        type="text"
-                        value={newAuthor}
-                        name="author"
-                        onChange={handleAuthorChange}
-                    />
-                </div>
-                <div>
-                    url:
-                    <input
-                        id="url"
-                        type="text"
-                        value={newUrl}
-                        name="url"
-                        onChange={handleUrlChange}
-                    />
-                </div>
-                <button type="submit">create</button>
-            </form>
+            <Togglable ref={myRef} buttonLabel='new blog'>
+                <h2>Create new</h2>
+                <form id='form' onSubmit={createBlog}>
+                    <div>
+                        title:
+                        <input {...title} />
+                    </div>
+                    <div>
+                        author:
+                        <input {...author} />
+                    </div>
+                    <div>
+                        url:
+                        <input {...url} />
+                    </div>
+                    <button type="submit">create</button>
+                </form>
+            </Togglable>
         </>
     )
 
 }
 
-NewBlogForm.propTypes = {
-    createBlog: PropTypes.func.isRequired,
+const mapStateToProps = (state) => {
+    return {
+        blogs: state.blogs,
+        notification: state.notification
+    }
 }
 
-export default NewBlogForm
+const mapDispatchToProps = {
+    addBlog,
+    setNotification
+}
+
+const ConnectedNewBlogForm = connect(mapStateToProps, mapDispatchToProps)(NewBlogForm)
+export default ConnectedNewBlogForm

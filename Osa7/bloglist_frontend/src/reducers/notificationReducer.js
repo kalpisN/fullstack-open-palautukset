@@ -1,12 +1,22 @@
 
-const initialState = { message: null, messageType: '' }
+const initialState = { message: null, messageType: 'err' }
+let timeOutID
 
-export const setNotific = (message, messageType) => {
+export const setNotification = (message, messageType) => {
+    clearTimeout(timeOutID)
+    return async dispatch => {
+        dispatch({
+            type: 'SET_MESSAGE',
+            data: { message: message, messageType: messageType }
+        })
 
-    return { type: 'SET_MESSAGE',
-        data: { message: message, messageType: messageType }
+        timeOutID = setTimeout(() => {
+            dispatch({
+                type: 'SET_MESSAGE',
+                data: { message: null, messageType: '' }
+            })
+        }, 5000)
     }
-
 }
 
 const notificationReducer = (state = initialState, action) => {
