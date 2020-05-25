@@ -1,11 +1,13 @@
 import React from 'react'
-import { connect } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { addBlog } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
 import Togglable from './Togglable'
 import { useField } from '../hooks'
+import { initializeUsers } from '../reducers/userReducer'
 
 const NewBlogForm = (props) => {
+    const dispatch = useDispatch()
 
     const myRef = React.createRef()
 
@@ -24,8 +26,11 @@ const NewBlogForm = (props) => {
             url: url.value
         }
 
-        await props.addBlog(blogObject)
-            .then(createdBlog => props.setNotification(`a new blog ${blogObject.title} by ${blogObject.author} was added to bloglist!`, 'success'))
+        dispatch(addBlog(blogObject))
+            .then(createdBlog => {
+                dispatch(setNotification(`a new blog ${blogObject.title} by ${blogObject.author} was added to bloglist!`, 'success'))
+                dispatch(initializeUsers())
+            })
             .catch(error => props.setNotification(error.message, 'err'))
     }
 
@@ -54,17 +59,4 @@ const NewBlogForm = (props) => {
 
 }
 
-const mapStateToProps = (state) => {
-    return {
-        blogs: state.blogs,
-        notification: state.notification
-    }
-}
-
-const mapDispatchToProps = {
-    addBlog,
-    setNotification
-}
-
-const ConnectedNewBlogForm = connect(mapStateToProps, mapDispatchToProps)(NewBlogForm)
-export default ConnectedNewBlogForm
+export default NewBlogForm

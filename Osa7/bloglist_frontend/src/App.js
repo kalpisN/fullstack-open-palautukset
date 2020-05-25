@@ -1,49 +1,54 @@
 import React, { useEffect } from 'react'
-import Blogs from './components/Blogs'
 import LoginForm from './components/LoginForm'
-import NewBlogForm from './components/NewBlogForm'
+import FrontPage from './components/FrontPage'
 import Notification from './components/Notification'
 import './App.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { initializeBlogs } from './reducers/blogReducer'
-import { logout, loggedUser } from './reducers/userReducer'
+import { loggedUser } from './reducers/loginReducer'
+import Users from './components/Users'
+import {
+    Switch, Route, useRouteMatch
+} from 'react-router-dom'
+import User from './components/User'
 
 
 const App = () => {
 
-    const user = useSelector(state => state.user)
+    const loggeduser = useSelector(state => state.loggeduser)
+    const users = useSelector(state => state.users)
     const dispatch = useDispatch()
 
     useEffect(() => {
+        dispatch(loggedUser())
         dispatch(initializeBlogs())
     }, [dispatch])
 
-    useEffect(() => {
-        dispatch(loggedUser())
-    }, [dispatch])
-
-    const handleLogout = async (event) => {
-        event.preventDefault()
-        dispatch(logout())
-    }
-
+    const match = useRouteMatch('/users/:id')
+    const user = match
+        ? users.find(user => user.id === match.params.id)
+        : null
 
     return (
         <div>
-            {user === null ?
+            {loggeduser === null ?
                 <div>
                     <Notification/>
                     <LoginForm/>
                 </div>
                 :
                 <div>
-                    <h1>Blogs</h1>
-                    <Notification/>
-                    <h3>{user.name} logged in
-                        <button id='logout' onClick={handleLogout}>Logout</button>
-                    </h3>
-                    <NewBlogForm/>
-                    <Blogs/>
+                    <Switch>
+                        <Route path="/users/:id">
+                            <User user={user}/>
+                        </Route>
+                        <Route path='/users'>
+                            <Users/>
+                        </Route>
+                        <Route path="/">
+                            <FrontPage/>
+                        </Route>
+                    </Switch>
 
                 </div>
             }

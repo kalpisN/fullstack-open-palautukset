@@ -1,9 +1,12 @@
 import React, { useState } from 'react'
+import { useSelector } from 'react-redux'
 
-const Blog = ({ user, blog , addLike , removeBlog }) => {
+const Blog = ({ blog , addLike , removeBlog }) => {
+
+    const loggeduser = useSelector(state => state.loggeduser)
 
     const showButton = {
-        display: user === (blog.user.id || blog.user) ? '' : 'none'
+        display: loggeduser.id === (blog.user.id || blog.user) ? '' : 'none'
     }
 
     const [showAll, setShowAll] = useState(false)
@@ -15,7 +18,7 @@ const Blog = ({ user, blog , addLike , removeBlog }) => {
     }
 
     const handleRemove = (event) => {
-        console.log(user)
+        console.log(loggeduser)
         removeBlog(event.target.value)
     }
 

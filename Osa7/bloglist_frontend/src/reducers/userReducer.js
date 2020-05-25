@@ -1,50 +1,22 @@
-import loginService from '../services/login'
-import blogService from '../services/blogs'
+import userService from '../services/users'
 
-export const loggedUser = () => {
+export const initializeUsers = () => {
     return async dispatch => {
-        const loggedUserJSON = window.localStorage.getItem('loggedUser')
-        if (loggedUserJSON) {
-            const user = JSON.parse(loggedUserJSON)
-            blogService.setToken(user.token)
-            dispatch({
-                type: 'LOGGED_USER',
-                data: user
-            })
-        }
-    }
-}
-export const login = (username, password) => {
-    return async dispatch => {
-        const user = await loginService.login({ username, password })
-        window.localStorage.setItem(
-            'loggedUser', JSON.stringify(user)
-        )
-        blogService.setToken(user.token)
+        const users = await userService.getAll()
+        console.log(users)
+
         dispatch({
-            type: 'LOGIN',
-            data: user
+            type: 'INIT_USERS',
+            data: users
         })
     }
 }
 
-export const logout = () => {
-    window.localStorage.removeItem('loggedUser')
-    return { type: 'LOGOUT', data: null }
-}
-
-const userReducer = (state = null, action) => {
-    console.log('user', state)
-    console.log('action', action)
+const userReducer = (state = [], action) => {
+    console.log('users: ', state)
+    console.log(action)
     switch(action.type) {
-    case 'LOGIN':
-        return action.data
-
-    case 'LOGOUT':
-        state = null
-        return state
-
-    case 'LOGGED_USER':
+    case 'INIT_USERS':
         return action.data
 
     default:

@@ -1,24 +1,22 @@
-import React, { useState } from 'react'
-import { connect } from 'react-redux'
+import React from 'react'
+import { useField } from '../hooks/index'
 import { setNotification } from '../reducers/notificationReducer'
-import { login } from '../reducers/userReducer'
+import { login } from '../reducers/loginReducer'
+import { useDispatch } from 'react-redux'
 
 
-const LoginForm = (props) => {
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
+const LoginForm = () => {
+
+    const username = useField('text')
+    const password = useField('password')
+
+    const dispatch = useDispatch()
 
     const handleLogin = async (event) => {
         event.preventDefault()
-
-        try {
-            props.login(username, password)
-            setUsername('')
-            setPassword('')
-
-        } catch (exeption) {
-            setNotification('wrong username or password', 'err')
-        }
+        dispatch(login(username.value, password.value))
+            .then(dispatch(setNotification(null, '')))
+            .catch(error => dispatch(setNotification('wrong username or password', 'err')))
     }
 
     return (
@@ -27,23 +25,11 @@ const LoginForm = (props) => {
             <form onSubmit={handleLogin}>
                 <div>
                     username
-                    <input
-                        id='username'
-                        type="text"
-                        value={username}
-                        name="Username"
-                        onChange={({ target }) => setUsername(target.value)}
-                    />
+                    <input {...username} />
                 </div>
                 <div>
                     password
-                    <input
-                        id='password'
-                        type="password"
-                        value={password}
-                        name="Password"
-                        onChange={({ target }) => setPassword(target.value)}
-                    />
+                    <input {...password} />
                 </div>
                 <button id='login' type="submit">login</button>
             </form>
@@ -51,17 +37,4 @@ const LoginForm = (props) => {
     )
 }
 
-const mapStateToProps = (state) => {
-    return {
-        notification: state.notification,
-        user: state.user
-    }
-}
-
-const mapDispatchToProps = {
-    setNotification,
-    login
-}
-
-const ConnectedLoginForm = connect(mapStateToProps, mapDispatchToProps)(LoginForm)
-export default ConnectedLoginForm
+export default LoginForm
