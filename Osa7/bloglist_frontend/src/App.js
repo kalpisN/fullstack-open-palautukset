@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import LoginForm from './components/LoginForm'
-import FrontPage from './components/FrontPage'
+import NewBlogForm from './components/NewBlogForm'
+import Blogs from './components/Blogs'
 import Notification from './components/Notification'
 import './App.css'
 import { useDispatch, useSelector } from 'react-redux'
@@ -11,12 +12,16 @@ import {
     Switch, Route, useRouteMatch
 } from 'react-router-dom'
 import User from './components/User'
+import Blog from './components/Blog'
+import Navbar from './components/Navbar'
 
 
 const App = () => {
 
     const loggeduser = useSelector(state => state.loggeduser)
     const users = useSelector(state => state.users)
+    const blogs = useSelector(state => state.blogs)
+
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -24,29 +29,41 @@ const App = () => {
         dispatch(initializeBlogs())
     }, [dispatch])
 
-    const match = useRouteMatch('/users/:id')
-    const user = match
-        ? users.find(user => user.id === match.params.id)
+    const matchUser = useRouteMatch('/users/:id')
+    const user = matchUser
+        ? users.find(user => user.id === matchUser.params.id)
+        : null
+
+    const matchBlog = useRouteMatch('/blogs/:id')
+    const blog = matchBlog
+        ? blogs.find(blog => blog.id === matchBlog.params.id)
         : null
 
     return (
         <div>
             {loggeduser === null ?
                 <div>
-                    <Notification/>
-                    <LoginForm/>
+                    <Notification />
+                    <LoginForm />
                 </div>
                 :
                 <div>
+                    <Navbar/>
+                    <h1>Blog App</h1>
+                    <Notification />
                     <Switch>
                         <Route path="/users/:id">
-                            <User user={user}/>
+                            <User user={user} />
                         </Route>
                         <Route path='/users'>
-                            <Users/>
+                            <Users />
+                        </Route>
+                        <Route path='/blogs/:id'>
+                            <Blog blog={blog}/>
                         </Route>
                         <Route path="/">
-                            <FrontPage/>
+                            <NewBlogForm />
+                            <Blogs />
                         </Route>
                     </Switch>
 

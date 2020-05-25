@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { initializeUsers } from '../reducers/userReducer'
-/* import { loggedUser } from '../reducers/loginReducer' */
+import { loggedUser } from '../reducers/loginReducer'
 
 const Users = () => {
 
@@ -11,7 +11,7 @@ const Users = () => {
 
     useEffect(() => {
         dispatch(initializeUsers())
-        /* dispatch(loggedUser()) */
+        dispatch(loggedUser())
     }, [dispatch])
 
 

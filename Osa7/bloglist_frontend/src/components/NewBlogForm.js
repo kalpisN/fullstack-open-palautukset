@@ -4,7 +4,7 @@ import { addBlog } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
 import Togglable from './Togglable'
 import { useField } from '../hooks'
-import { initializeUsers } from '../reducers/userReducer'
+import { loggedUser } from '../reducers/loginReducer'
 
 const NewBlogForm = (props) => {
     const dispatch = useDispatch()
@@ -29,9 +29,9 @@ const NewBlogForm = (props) => {
         dispatch(addBlog(blogObject))
             .then(createdBlog => {
                 dispatch(setNotification(`a new blog ${blogObject.title} by ${blogObject.author} was added to bloglist!`, 'success'))
-                dispatch(initializeUsers())
+                dispatch(loggedUser())
             })
-            .catch(error => props.setNotification(error.message, 'err'))
+            .catch(error => dispatch(setNotification(error.message, 'err')))
     }
 
     return (

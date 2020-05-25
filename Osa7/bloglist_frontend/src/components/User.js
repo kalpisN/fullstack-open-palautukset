@@ -1,6 +1,15 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
+import { initializeUsers } from '../reducers/userReducer'
 
 const User = ({ user }) => {
+
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        dispatch(initializeUsers())
+    }, [dispatch])
+
     if (!user) {
         return null
     }
