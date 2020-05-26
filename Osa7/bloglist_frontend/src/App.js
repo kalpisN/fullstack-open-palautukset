@@ -40,7 +40,7 @@ const App = () => {
         : null
 
     return (
-        <div>
+        <>
             {loggeduser === null ?
                 <div>
                     <Notification />
@@ -67,7 +67,7 @@ const App = () => {
                     </Switch>
                 </div>
             }
-        </div>
+        </>
     )
 }
 

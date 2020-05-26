@@ -1,8 +1,7 @@
 import React, { useState, useImperativeHandle } from 'react'
 import PropTypes from 'prop-types'
-import Button from 'react-bootstrap/Button'
 import Fab from '@material-ui/core/Fab'
-import AddIcon from '@material-ui/icons/Add'
+import CloseIcon from '@material-ui/icons/Close';
 
 const Togglable = React.forwardRef((props, ref) => {
     const [visible, setVisible] = useState(false)
@@ -22,20 +21,23 @@ const Togglable = React.forwardRef((props, ref) => {
 
     return (
         <div className="togglable">
-            <Fab className="addButton" aria-label="add" style={hideWhenVisible} size="small"
-                onClick={toggleVisibility} color="light">
-                <AddIcon />
+            <Fab aria-label="add" style={hideWhenVisible}
+                onClick={toggleVisibility}>
+                {props.buttonLabel}
             </Fab>
             <div style={showWhenVisible}>
+                <Fab aria-label="close" style={showWhenVisible}
+                    onClick={toggleVisibility}>
+                    <CloseIcon />
+                </Fab>
                 {props.children}
-                <Button size="sm" variant="outline-dark" onClick={toggleVisibility}>cancel</Button>
             </div>
         </div>
     )
 })
 
 Togglable.propTypes = {
-    buttonLabel: PropTypes.string.isRequired
+    buttonLabel: PropTypes.object.isRequired
 }
 Togglable.displayName = 'Togglable'
 export default Togglable

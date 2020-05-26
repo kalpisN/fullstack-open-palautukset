@@ -9,8 +9,9 @@ const Blogs = () => {
 
     return (
         <ListGroup className="bloglist">
+            <h2 className="header">BLOGS</h2>
             {blogs.map(blog =>
-                <ListGroup.Item action href={`/blogs/${blog.id}`} variant="light" key={blog.id} className='blog'>{blog.title}</ListGroup.Item>
+                <ListGroup.Item action href={`/blogs/${blog.id}`} variant="light" key={blog.id}>{blog.title}</ListGroup.Item>
             )}
         </ListGroup>
     )

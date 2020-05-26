@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { initializeUsers } from '../reducers/userReducer'
+import ListGroup from 'react-bootstrap/ListGroup'
 
 const User = ({ user }) => {
 
@@ -14,12 +15,11 @@ const User = ({ user }) => {
         return null
     }
     return (
-        <div>
-            <h2>{user.name}</h2>
-            <h3>added blogs</h3>
+        <ListGroup className="user">
+            <ListGroup.Item className="header2" variant="dark">{user.name} added blogs</ListGroup.Item>
             {user.blogs.map(blog =>
-                <li key={blog.id}>{blog.title}</li>)}
-        </div>
+                <ListGroup.Item variant="light" key={blog.id}>{blog.title}</ListGroup.Item>)}
+        </ListGroup>
     )
 
 }

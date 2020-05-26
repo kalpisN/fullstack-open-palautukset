@@ -1,5 +1,5 @@
 
-const initialState = { message: null, messageType: 'err' }
+const initialState = { message: null, messageType: 'error' }
 let timeOutID
 
 export const setNotification = (message, messageType) => {

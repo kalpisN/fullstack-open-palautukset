@@ -9,6 +9,7 @@ import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import InputGroup from 'react-bootstrap/InputGroup'
 import FormControl from 'react-bootstrap/FormControl'
+import AddIcon from '@material-ui/icons/Add'
 
 const NewBlogForm = (props) => {
     const dispatch = useDispatch()
@@ -35,7 +36,7 @@ const NewBlogForm = (props) => {
                 dispatch(setNotification(`a new blog ${blogObject.title} by ${blogObject.author} was added to bloglist!`, 'success'))
                 dispatch(loggedUser())
             })
-            .catch(error => dispatch(setNotification(error.message, 'error')))
+            .catch(error => dispatch(setNotification(error.message, 'danger')))
 
         title.onSubmit()
         author.onSubmit()
@@ -45,10 +46,10 @@ const NewBlogForm = (props) => {
 
     return (
         <div className="addBlog">
-            <Togglable ref={myRef} buttonLabel='new blog'>
-                <h2 className="header" >Create new</h2>
+            <Togglable ref={myRef} buttonLabel={<AddIcon/>}>
+                <h2 className="header2" >Create new</h2>
                 <Form id='form' onSubmit={createBlog}>
-                    <InputGroup>
+                    <InputGroup className="newBlogInput">
                         <InputGroup.Prepend>
                             <InputGroup.Text className="inputLabel">Title</InputGroup.Text>
                         </InputGroup.Prepend>
@@ -57,7 +58,7 @@ const NewBlogForm = (props) => {
                             {...title}
                         />
                     </InputGroup>
-                    <InputGroup>
+                    <InputGroup className="newBlogInput">
                         <InputGroup.Prepend>
                             <InputGroup.Text className="inputLabel">Author</InputGroup.Text>
                         </InputGroup.Prepend>
@@ -66,16 +67,16 @@ const NewBlogForm = (props) => {
                             {...author}
                         />
                     </InputGroup>
-                    <InputGroup>
+                    <InputGroup className="newBlogInput">
                         <InputGroup.Prepend>
-                            <InputGroup.Text className="inputLabel">Url</InputGroup.Text>
+                            <InputGroup.Text className="inputLabel">URL</InputGroup.Text>
                         </InputGroup.Prepend>
                         <FormControl
                             placeholder="https://example.com"
-                            {...author}
+                            {...url}
                         />
                     </InputGroup>
-                    <Button className="button"type="submit" size="sm" variant="outline-dark">create</Button>
+                    <Button className="createButton" type="submit" size="sm" variant="outline-dark">create</Button>
                 </Form>
             </Togglable>
         </div>

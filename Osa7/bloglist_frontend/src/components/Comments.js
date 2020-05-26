@@ -3,6 +3,8 @@ import { useField } from '../hooks/index'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchComments, addNew } from '../reducers/commentReducer'
 import { setNotification } from '../reducers/notificationReducer'
+import Button from 'react-bootstrap/Button'
+import ListGroup from 'react-bootstrap/ListGroup'
 
 
 const Comments = ({ id }) => {
@@ -26,7 +28,7 @@ const Comments = ({ id }) => {
         }
         await dispatch(addNew(commentObject))
             .then(addedComment => dispatch(setNotification('new comment added succesfully!', 'success')))
-            .catch(error => dispatch(setNotification('Oops, something went wrong and the comment may not have been added!', 'error')))
+            .catch(error => dispatch(setNotification('Oops, something went wrong and the comment may not have been added!', 'danger')))
         dispatch(fetchComments(id))
         comment.onSubmit()
 
@@ -37,19 +39,20 @@ const Comments = ({ id }) => {
 
     return (
         <div>
-            <h3>comments</h3>
+            <h3 className="header2">Comments</h3>
             <form onSubmit={addComment}>
                 <div>
-                    <input {...comment} /><button type="submit">add comment</button>
+                    <input className="commentinput" {...comment} /><Button className="commentButton" size="sm" variant="outline-dark" type="submit">add comment</Button>
                 </div>
             </form>
-            <div>
+            <ListGroup className="comments">
                 {comments.map(c =>
-                    <li key={c.id}>{c.content}</li>)}
-            </div>
+                    <ListGroup.Item variant="light" key={c.id}>{c.content}</ListGroup.Item>)}
+            </ListGroup>
         </div>
 
     )
 }
 
 export default Comments
+

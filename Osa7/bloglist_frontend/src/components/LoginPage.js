@@ -19,12 +19,12 @@ const LoginPage = () => {
         event.preventDefault()
         dispatch(login(username.value, password.value))
             .then(loggedUser => dispatch(setNotification(`Welcome, ${username.value}`, 'success')))
-            .catch(error => dispatch(setNotification('wrong username or password', 'error')))
+            .catch(error => dispatch(setNotification('wrong username or password', 'danger')))
     }
 
     return (
         <div className ="login">
-            <h2 className="header">Login to application</h2>
+            <h2 className="loginHeader">Login to Blog App</h2>
             <Form onSubmit={handleLogin}>
                 <Form.Group controlId="formBasicUsername">
                     <Form.Label><b>Username</b></Form.Label>
