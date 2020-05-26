@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import LoginForm from './components/LoginForm'
+import LoginPage from './components/LoginPage'
 import NewBlogForm from './components/NewBlogForm'
 import Blogs from './components/Blogs'
 import Notification from './components/Notification'
@@ -13,7 +13,7 @@ import {
 } from 'react-router-dom'
 import User from './components/User'
 import Blog from './components/Blog'
-import Navbar from './components/Navbar'
+import Navigation from './components/Navigation'
 
 
 const App = () => {
@@ -44,12 +44,11 @@ const App = () => {
             {loggeduser === null ?
                 <div>
                     <Notification />
-                    <LoginForm />
+                    <LoginPage />
                 </div>
                 :
                 <div>
-                    <Navbar/>
-                    <h1>Blog App</h1>
+                    <Navigation/>
                     <Notification />
                     <Switch>
                         <Route path="/users/:id">
@@ -62,11 +61,10 @@ const App = () => {
                             <Blog blog={blog}/>
                         </Route>
                         <Route path="/">
-                            <NewBlogForm />
                             <Blogs />
+                            <NewBlogForm />
                         </Route>
                     </Switch>
-
                 </div>
             }
         </div>

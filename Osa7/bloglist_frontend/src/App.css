@@ -1,20 +1,33 @@
-.blog {
-  padding-left: 20px; 
-  border-style: solid;
-  border-width: 1px;
-  margin-top: 10px;
-  margin-bottom: 10p;
-  border-radius: 5px;
+.bloglist {
+  margin-bottom: 10px;
   box-shadow: 3px 3px 10px 5px lightgray;
-  max-width: 500px;
+}
+.addBlog {
+  margin: 15px;
+  width: 50vw;
+  padding-right: 20px;
+  padding-bottom: 15px;
+  padding-left: 20px;
+  padding-top: 10px;
 }
 
-button {
-  background-color: white;
-  margin-left: 5px;
-  border-radius: 3px;
+.togglable {
+  margin: 15px;
+}
+
+.inputLabel {
+  width: 70px;
+  background-color: whitesmoke;
+  border-radius: 5px;
+}
+
+.button {
+  margin-top: 10px;
+}
+#body {
+  margin: 0px,
 }
 
 #root {
-  margin: 15px
+  margin: 0px
 }

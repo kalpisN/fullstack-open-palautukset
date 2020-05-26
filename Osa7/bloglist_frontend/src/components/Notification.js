@@ -1,25 +1,20 @@
 import React from 'react'
-import './Notification.css'
-import { connect } from 'react-redux'
+import { useSelector } from 'react-redux'
+import Alert from 'react-bootstrap/Alert'
 
-const Notification = (props) => {
+const Notification = () => {
+
+    const notification = useSelector(state => state.notification)
+
     return (
         <>
-            {props.notification.message === null ? null :
-                <div className={props.notification.messageType}>
-                    {props.notification.message}
-                </div>
-
+            {notification.message === null ? null :
+                <Alert variant={notification.messageType}>
+                    {notification.message}
+                </Alert>
             }
         </>
     )
 }
 
-const mapStateToProps = (state) => {
-    return {
-        notification: state.notification
-    }
-}
-
-const ConnectedNotification = connect(mapStateToProps)(Notification)
-export default ConnectedNotification
+export default Notification
